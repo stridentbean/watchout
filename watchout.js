@@ -15,12 +15,37 @@ var createAsteroid = function(x, y, diameter) {
 
   d3.selectAll('svg')
     .append("image")
+    .attr("class", "asteroid")
     .attr("x", x)
     .attr("y", y)
     .attr("xlink:href", "asteroid.png")
     .attr("height", diameter)
     .attr("width", diameter);
 
+};
+
+var dragmove = function() {
+  d3.select(this)
+    .attr({
+      x: d3.event.x - 35,
+      y: d3.event.y - 35
+    });
+}
+
+var drag = d3.behavior.drag().on("drag", dragmove);
+
+var createPlayer = function() {
+  d3.select("svg")
+    .append("image")
+    .attr({
+      class: "player",
+      x: gameBoard.width / 2,
+      y: gameBoard.height / 2,
+      "xlink:href": "falcon.png",
+      height: 70,
+      width: 70
+    })
+    .call(drag);
 };
 
 var generateRandomAsteroid = function(num) {
@@ -33,6 +58,7 @@ var generateRandomAsteroid = function(num) {
 }
 
 generateRandomAsteroid(50);
+createPlayer();
 
 // d3.selectAll("circle")
 //   .transition()
@@ -50,7 +76,7 @@ var randomGenerator = function(maxSize) {
 var randomlyMoveAsteroid = function() {
   //var x = Math.floor(Math.random() * gameBoard.width);
   //var y = Math.floor(Math.random() * gameBoard.height);
-  d3.selectAll('image')
+  d3.selectAll('.asteroid')
     .transition()
     .duration(2000)
     .attr('x', randomGenerator(gameBoard.width))
